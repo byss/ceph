@@ -7,8 +7,10 @@ macro(build_spdk)
   find_package(CUnit REQUIRED)
   if(LINUX)
     find_package(aio REQUIRED)
-    find_package(uuid REQUIRED)
-  endif()
+	endif()
+	if (LINUX OR APPLE)
+		find_package(uuid REQUIRED)
+	endif()
   include(ExternalProject)
   ExternalProject_Add(spdk-ext
     DEPENDS dpdk-ext

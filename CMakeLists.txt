@@ -29,7 +29,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   set(LINUX ON)
   FIND_PACKAGE(Threads)
-elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD" OR CMAKE_SYSTEM_NAME MATCHES "Darwin")
   set(FREEBSD ON)
   FIND_PACKAGE(Threads)
 endif(CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -37,8 +37,9 @@ endif(CMAKE_SYSTEM_NAME MATCHES "Linux")
 if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7)
     message(FATAL_ERROR "GCC 7+ required due to C++17 requirements")
-  endif()
+	endif()
 endif()
+
 
 option(WITH_CCACHE "Build with ccache.")
 if(WITH_CCACHE)
@@ -54,6 +55,10 @@ if(WITH_CCACHE)
     message(FATAL_ERROR "Can't find ccache. Is it installed?")
   endif(CCACHE_FOUND)
 endif(WITH_CCACHE)
+
+if(APPLE)
+	set(CMAKE_PREFIX_PATH "/usr/local;/usr/local/opt/sphinx-doc;/usr/local/opt/nss;/usr/local/opt/libressl" [CACHE])
+endif()
 
 option(WITH_MANPAGE "Build man pages." ON)
 if(WITH_MANPAGE)
@@ -73,11 +78,11 @@ if(OFED_PREFIX)
   link_directories(${OFED_PREFIX}/lib)
 endif()
 
-if(FREEBSD)
+if(FREEBSD AND NOT APPLE)
   include_directories(SYSTEM /usr/local/include)
   link_directories(/usr/local/lib)
   list(APPEND CMAKE_REQUIRED_INCLUDES /usr/local/include)
-endif(FREEBSD)
+endif()
 
 #Check Includes
 include(CheckIncludeFiles)
@@ -199,7 +204,7 @@ if(NOT HAVE_CXX11_ATOMIC)
     "${CMAKE_CXX_STANDARD_LIBRARIES} ${LIBATOMIC_LINK_FLAGS}")
 endif()
 
-option(WITH_RDMA "Enable RDMA in async messenger" ON)
+option(WITH_RDMA "Enable RDMA in async messenger" $<NOT:APPLE>)
 if(WITH_RDMA)
   find_package(verbs REQUIRED)
   set(HAVE_VERBS ${VERBS_FOUND})
@@ -306,7 +311,7 @@ if(WITH_QATZIP)
 endif(WITH_QATZIP)
 
 # needs mds and? XXX
-option(WITH_LIBCEPHFS "libcephfs client library" ON)
+option(WITH_LIBCEPHFS "libcephfs client library" $<NOT:APPLE>)
 
 # key-value store
 option(WITH_KVS "Key value store is here" ON)
@@ -315,7 +320,7 @@ option(WITH_KVS "Key value store is here" ON)
 option(WITH_RBD "Remote block storage is here" ON)
 
 # KERNEL remote block storage
-option(WITH_KRBD "Kernel Remote block storage is here" ON)
+option(WITH_KRBD "Kernel Remote block storage is here" $<NOT:APPLE>)
 
 if(WITH_KRBD AND WITHOUT_RBD)
   message(FATAL_ERROR "Cannot have WITH_KRBD with WITH_RBD.")
@@ -511,7 +516,7 @@ endif (WITH_RADOSGW)
 option(WITH_CEPHFS "CephFS is enabled" ON)
 
 #option for Mgr
-option(WITH_MGR "ceph-mgr is enabled" ON)
+option(WITH_MGR "ceph-mgr is enabled" <$NOT:APPLE>)
 if(WITH_MGR)
   # Please specify 3 or 3.[0-7] if you want to build with python3 support.
   # FindPyhonInterp and FindPythonLibs think they belong to different families.
@@ -545,7 +550,8 @@ find_package(ZLIB REQUIRED)
 option(WITH_EVENTTRACE "Event tracing support" OFF)
 
 #option for LTTng
-option(WITH_LTTNG "LTTng tracing is enabled" ON)
+option(WITH_LTTNG "LTTng tracing is enabled" $<NOT:APPLE>)
+message(WARNING "WITH_LTTNG: ${WITH_LTTNG}" + ' ' +  $<NOT:APPLE>)
 if(${WITH_LTTNG})
   find_package(LTTngUST REQUIRED)
   find_program(LTTNG_GEN_TP
@@ -558,7 +564,7 @@ endif(${WITH_LTTNG})
 option(WITH_OSD_INSTRUMENT_FUNCTIONS OFF)
 
 #option for Babeltrace
-option(WITH_BABELTRACE "Babeltrace libraries are enabled" ON)
+option(WITH_BABELTRACE "Babeltrace libraries are enabled" $<NOT:APPLE>)
 if(WITH_BABELTRACE)
   set(HAVE_BABELTRACE ON)
   find_package(babeltrace REQUIRED)

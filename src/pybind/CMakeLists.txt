@@ -23,20 +23,28 @@ foreach(python_version ${py_vers})
   find_package(Cython REQUIRED)
 
   add_subdirectory(rados rados${PYTHON_VERSION})
-  add_custom_target(cython${PYTHON_VERSION}_modules ALL
-    DEPENDS cython${PYTHON_VERSION}_rados)
+  if(WITH_PYTHON2 OR WITH_PYTHON3)
+    add_custom_target(cython${PYTHON_VERSION}_modules ALL
+      DEPENDS cython${PYTHON_VERSION}_rados)
+  endif()
 
   if(WITH_RBD)
     add_subdirectory(rbd rbd${PYTHON_VERSION})
-    add_dependencies(cython${PYTHON_VERSION}_modules cython${PYTHON_VERSION}_rbd)
+    if(WITH_PYTHON2 OR WITH_PYTHON3)
+      add_dependencies(cython${PYTHON_VERSION}_modules cython${PYTHON_VERSION}_rbd)
+    endif()
   endif()
   if(WITH_CEPHFS)
     add_subdirectory(cephfs cephfs${PYTHON_VERSION})
-    add_dependencies(cython${PYTHON_VERSION}_modules cython${PYTHON_VERSION}_cephfs)
+    if(WITH_PYTHON2 OR WITH_PYTHON3)
+      add_dependencies(cython${PYTHON_VERSION}_modules cython${PYTHON_VERSION}_cephfs)
+      endif()
   endif()
   if(WITH_RADOSGW)
     add_subdirectory(rgw rgw${PYTHON_VERSION})
-    add_dependencies(cython${PYTHON_VERSION}_modules cython${PYTHON_VERSION}_rgw)
+    if(WITH_PYTHON2 OR WITH_PYTHON3)
+      add_dependencies(cython${PYTHON_VERSION}_modules cython${PYTHON_VERSION}_rgw)
+    endif()
   endif()
 
   # if CMAKE_INSTALL_PREFIX is an empty string, must replace

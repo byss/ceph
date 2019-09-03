@@ -217,7 +217,7 @@ if(WITH_CEPHFS_JAVA)
 endif()
 
 # Python stuff
-option(WITH_PYTHON2 "build python2 bindings" ON)
+option(WITH_PYTHON2 "build python2 bindings" $<NOT:APPLE>)
 if(WITH_PYTHON2)
   find_package(PythonInterp 2 REQUIRED)
   find_package(PythonLibs ${PYTHON_VERSION_STRING} EXACT REQUIRED)
@@ -468,7 +468,9 @@ if(NOT CEPH_BUILD_VIRTUALENV)
   set(CEPH_BUILD_VIRTUALENV ${CMAKE_BINARY_DIR})
 endif()
 
-add_subdirectory(pybind)
+if(WITH_PYTHON2 OR WITH_PYTHON3)
+  add_subdirectory(pybind)
+endif()
 add_subdirectory(ceph-volume)
 
 # Monitor
@@ -746,7 +748,7 @@ if (WITH_MGR)
 endif()
 
 add_custom_target(vstart DEPENDS vstart-base)
-if (WITH_RBD)
+if (WITH_RBD AND (WITH_PYTHON2 OR WITH_PYTHON3))
   add_dependencies(vstart cython${PY_BINDING_INFIX}_rbd)
 endif()
 if (WITH_CEPHFS)

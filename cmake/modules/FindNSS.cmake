@@ -20,6 +20,7 @@ if (NSS_LIBRARIES AND NSS_INCLUDE_DIRS)
 else (NSS_LIBRARIES AND NSS_INCLUDE_DIRS)
   find_package(PkgConfig)
   if (PKG_CONFIG_FOUND)
+
     pkg_check_modules(_NSS nss)
   endif (PKG_CONFIG_FOUND)
 

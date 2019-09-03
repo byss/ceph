@@ -94,7 +94,7 @@ function(do_build_boost version)
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     set(toolset gcc)
-  elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+  elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL AppleClang)
     set(toolset clang)
   else()
     message(SEND_ERROR "unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
