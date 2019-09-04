@@ -41,12 +41,24 @@
 #define tracepoint(...)
 #endif
 
+#if __APPLE__
+
+#define LIBRADOS_C_API_BASE(fn)
+#define LIBRADOS_C_API_BASE_DEFAULT(fn)       \
+  asm(".global _" #fn);                       \
+  asm(".set _" #fn ", __" #fn);
+#define LIBRADOS_C_API_DEFAULT(fn, ver) LIBRADOS_C_API_BASE_DEFAULT(fn)
+
+#else
+
 #define LIBRADOS_C_API_BASE(fn)               \
   asm(".symver _" #fn "_base, " #fn "@")
 #define LIBRADOS_C_API_BASE_DEFAULT(fn)       \
   asm(".symver _" #fn ", " #fn "@@")
 #define LIBRADOS_C_API_DEFAULT(fn, ver)       \
   asm(".symver _" #fn ", " #fn "@@LIBRADOS_" #ver)
+  
+#endif
 
 using std::string;
 using std::map;

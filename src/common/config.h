@@ -77,7 +77,8 @@ public:
                          bool ConfigValues::*,
                          entity_addr_t ConfigValues::*,
 			 entity_addrvec_t ConfigValues::*,
-                         uuid_d ConfigValues::*> member_ptr_t;
+                         uuid_d ConfigValues::*,
+                         size_t ConfigValues::*> member_ptr_t;
 
   // For use when intercepting configuration updates
   typedef std::function<bool(
@@ -114,7 +115,7 @@ public:
 
   typedef enum {
     OPT_INT, OPT_LONGLONG, OPT_STR, OPT_DOUBLE, OPT_FLOAT, OPT_BOOL,
-    OPT_ADDR, OPT_ADDRVEC, OPT_U32, OPT_U64, OPT_UUID
+    OPT_ADDR, OPT_ADDRVEC, OPT_U32, OPT_U64, OPT_UUID, OPT_SIZE
   } opt_type_t;
 
   // Create a new md_config_t structure.

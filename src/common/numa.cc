@@ -1,8 +1,6 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
 // vim: ts=8 sw=2 smarttab
 
-#include "numa.h"
-
 #include <cstring>
 #include <errno.h>
 #include <iostream>
@@ -13,6 +11,9 @@
 
 // list
 #if defined(__linux__)
+
+#include "numa.h"
+
 int parse_cpu_set_list(const char *s,
 		       size_t *cpu_set_size,
 		       cpu_set_t *cpu_set)

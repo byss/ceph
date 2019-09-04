@@ -319,7 +319,7 @@ struct SparsifyPayload : public AsyncRequestPayloadBase {
   SparsifyPayload(const AsyncRequestId &id, size_t sparse_size)
     : AsyncRequestPayloadBase(id), sparse_size(sparse_size) {}
 
-  size_t sparse_size = 0;
+  uint64_t sparse_size = 0;
 
   void encode(bufferlist &bl) const;
   void decode(__u8 version, bufferlist::const_iterator &iter);

@@ -22,7 +22,6 @@
 #endif
 #include "common/debug.h"
 #include "common/errno.h"
-#include "common/numa.h"
 
 #include <netdb.h>
 

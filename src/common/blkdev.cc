@@ -34,7 +34,6 @@
 #include "include/uuid.h"
 #include "include/stringify.h"
 #include "blkdev.h"
-#include "numa.h"
 
 #include "json_spirit/json_spirit_reader.h"
 

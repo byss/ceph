@@ -57,7 +57,8 @@ if(WITH_CCACHE)
 endif(WITH_CCACHE)
 
 if(APPLE)
-	set(CMAKE_PREFIX_PATH "/usr/local;/usr/local/opt/sphinx-doc;/usr/local/opt/nss;/usr/local/opt/libressl" [CACHE])
+	set(CMAKE_PREFIX_PATH "/usr/local;/usr/local/opt/sphinx-doc;/usr/local/opt/nss;/usr/local/opt/openssl" [CACHE])
+	include_directories(/usr/local/opt/openssl/include)
 endif()
 
 option(WITH_MANPAGE "Build man pages." ON)
@@ -273,7 +274,7 @@ if(WITH_BLUESTORE)
 endif()
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "i386|i686|amd64|x86_64|AMD64|aarch64")
-  option(WITH_SPDK "Enable SPDK" ON)
+  option(WITH_SPDK "Enable SPDK" $<NOT:APPLE>)
 else()
   option(WITH_SPDK "Enable SPDK" OFF)
 endif()
@@ -551,7 +552,6 @@ option(WITH_EVENTTRACE "Event tracing support" OFF)
 
 #option for LTTng
 option(WITH_LTTNG "LTTng tracing is enabled" $<NOT:APPLE>)
-message(WARNING "WITH_LTTNG: ${WITH_LTTNG}" + ' ' +  $<NOT:APPLE>)
 if(${WITH_LTTNG})
   find_package(LTTngUST REQUIRED)
   find_program(LTTNG_GEN_TP
@@ -636,7 +636,7 @@ option(WITH_SEASTAR "Build seastar components")
 set(HAVE_SEASTAR ${WITH_SEASTAR})
 
 # Boost
-option(WITH_SYSTEM_BOOST "require and build with system Boost" OFF)
+option(WITH_SYSTEM_BOOST "require and build with system Boost" ${APPLE})
 
 # Boost::thread depends on Boost::atomic, so list it explicitly.
 set(BOOST_COMPONENTS

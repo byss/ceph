@@ -22,7 +22,7 @@
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 
-#include <ostringstream>
+#include <sstream>
 
 #ifndef NSEC_PER_SEC
 #define NSEC_PER_SEC 1000000000ULL

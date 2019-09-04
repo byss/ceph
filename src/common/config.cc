@@ -1490,6 +1490,12 @@ class assign_visitor : public boost::static_visitor<>
     auto member = const_cast<T*>(&(conf->*(boost::get<const T Config::*>(ptr))));
     *member = boost::apply_visitor(get_size_visitor<T>{}, val);
   }
+  void operator()(size_t Config::* ptr) const
+  {
+    using T = size_t;
+    auto member = const_cast<T*>(&(conf->*(boost::get<const T Config::*>(ptr))));
+    *member = boost::apply_visitor(get_size_visitor<T>{}, val);
+  }
 };
 } // anonymous namespace
 

@@ -135,6 +135,7 @@ static void distro_detect(map<string, string> *m, CephContext *cct)
   }
 }
 
+#ifndef __APPLE__
 int get_cgroup_memory_limit(uint64_t *limit)
 {
   // /sys/fs/cgroup/memory/memory.limit_in_bytes
@@ -165,7 +166,7 @@ out:
   fclose(f);
   return ret;
 }
-
+#endif // !defined (__APPLE__)
 
 void collect_sys_info(map<string, string> *m, CephContext *cct)
 {
